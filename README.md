@@ -2,7 +2,7 @@
 
 This is the repo containing code for the DENA BMIL project.
 
-## TODO
+## What should be achieved
 - Make a general python script, which 
   - can generate a random, or
   - encrypt data and store it into a file
@@ -13,6 +13,21 @@ This is the repo containing code for the DENA BMIL project.
   - checks, if a store file exists
     - if not -> get random from python script -> make new identity -> store it in an encrypted file
     - if it does exist -> decrypt file -> setup identity
+
+## How to use
+- Local development
+  - Use node v10 or v12
+  - Install dependencies with `yarn install`
+  - Use in development mode with `yarn start`
+    - This will use a mock implementation of the zymkey cryto chip
+- To use on OLI box
+  - Make sure nodejs and yarn are installed
+  - Make sure python3 is installed
+  - Make sure, that zymkey libraries are installed
+    - If not install them according to point 4 in the manual: https://community.zymbit.com/t/getting-started-zymkey4i-with-raspberry-pi/202
+  - `yarn install` for dependencies
+  - `yarn build` to build the application in production mode using zymkey crypto chip
+  - `yarn serve` to run the application
 
 ## Notes
 ### Setup
