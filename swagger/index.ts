@@ -8,20 +8,22 @@
  * $ npm run start-gendoc
  */
 
+const router = require('../routes')
+
 const swaggerUi = require('swagger-ui-express')
-const YAML = require('yamljs');
+const YAML = require('yamljs')
 const express = require('express')
 const app = express()
 
-const swaggerFile = YAML.load(__dirname + '/swagger.yml');
+const swaggerFile = YAML.load(__dirname + '/swagger.yml')
 
 /* Middlewares */
 app.use(express.json())
+app.use(router.default)
 app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
 app.listen(3000, () => {
-  console.log("Server is running!\nAPI documentation: http://localhost:3000/doc")
+  console.log(
+    'Server is running!\nAPI documentation: http://localhost:3000/doc'
+  )
 })
-
-/* Endpoints */
-// require('./src/endpoints')(app)

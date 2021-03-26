@@ -39,9 +39,9 @@ paths:
           description: DID registered
           content:
             application/json:
-              example:
-                id: 1
-                name: Otto
+              examples:
+                DDO:
+                  $ref: '#/components/examples/DDO'
   /claim:
     post:
       tags: [Claiming]
@@ -54,5 +54,27 @@ components:
   schemas:    
     Identity:
       type: string
-      example: '4sdfsdfrewer3'
+      example: '4rAPNc2DPmbL1MWyQxPmaR5TTYta9jexdnLMY34AA32UFpeY'
+  examples:
+    DDO:
+      value:
+        id: 'did:kilt:4rAPNc2DPmbL1MWyQxPmaR5TTYta9jexdnLMY34AA32UFpeY'
+        '@context': 'https://w3id.org/did/v1'
+        authentication:
+          - publicKey:
+              - 'did:kilt:4rAPNc2DPmbL1MWyQxPmaR5TTYta9jexdnLMY34AA32UFpeY#key-1'
+            type: Ed25519SignatureAuthentication2018
+        publicKey:
+          - controller: 'did:kilt:4rAPNc2DPmbL1MWyQxPmaR5TTYta9jexdnLMY34AA32UFpeY'
+            id: 'did:kilt:4rAPNc2DPmbL1MWyQxPmaR5TTYta9jexdnLMY34AA32UFpeY#key-1'
+            publicKeyHex: '0x8fa094c521c982567063e0a648369e4b666f669d4ddfa903a048bb6e2c3f1ec6'
+            type: Ed25519VerificationKey2018
+          - controller: 'did:kilt:4rAPNc2DPmbL1MWyQxPmaR5TTYta9jexdnLMY34AA32UFpeY'
+            id: 'did:kilt:4rAPNc2DPmbL1MWyQxPmaR5TTYta9jexdnLMY34AA32UFpeY#key-2'
+            publicKeyHex: '0xf4e6a9dce42e748621405998e360c354f6cab5430d459291f92a024e42572b0f'
+            type: X25519Salsa20Poly1305Key2018
+        service:
+          - serviceEndpoint: 'https://services.kilt.io/messaging'
+            type: KiltMessagingService
+      
 
