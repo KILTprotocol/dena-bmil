@@ -1,0 +1,58 @@
+openapi: '3.0.3'
+info:
+  version: 1.0.0
+  title: DENA-BMIL
+  description: Documentation for the KILT BMIL application
+tags:
+  - name: Identity
+  - name: Claiming
+paths:
+  /identity:
+    post:
+      tags:
+        - Identity
+      description: Endpoint to generate and store a new Identity.
+      responses:
+        '200':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Identity'
+    get:
+      tags:
+        - Identity
+      description: Endpoint to get stored Identity address.
+      responses:
+        '200':
+          description: Returns the stored Identitiy address.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Identity'
+  /identity/register:
+    post:
+      tags: [Identity]
+      description: Registers the stored Identity as a DID.
+      responses:
+        '200':
+          description: DID registered
+          content:
+            application/json:
+              example:
+                id: 1
+                name: Otto
+  /claim:
+    post:
+      tags: [Claiming]
+      description: Generates a Claim and sends a RequestForAttestation to an Attester.
+      responses:
+        '200':
+          description: Claim successfully generated and sent to the attester.
+
+components:
+  schemas:    
+    Identity:
+      type: string
+      example: '4sdfsdfrewer3'
+
