@@ -65,13 +65,13 @@ app.post('/identity', (req, res) => {
   generateRandom().then((random) => {
     const identity = Kilt.Identity.buildFromURI(`0x${random}`)
     encryptAndStore({ identity: identity.seedAsHex })
-    res.send(identity.address)
+    res.json(identity.address)
   })
 })
 
 app.get('/identity', async (req, res) => {
   const identity = await getStoredIdentity()
-  res.send(identity.address)
+  res.json(identity.address)
 })
 
 app.post('/identity/register', async (req, res, next) => {
@@ -171,7 +171,7 @@ app.post('/claim', async (req, res) => {
     await storeRequest(requestForAttestation)
   }
 
-  res.send('Finished')
+  res.json('Finished')
 })
 
 // Error handler
