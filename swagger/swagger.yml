@@ -6,6 +6,7 @@ info:
 tags:
   - name: Identity
   - name: Claiming
+  - name: Credential
 paths:
   /identity:
     post:
@@ -49,6 +50,18 @@ paths:
       responses:
         '200':
           description: Claim successfully generated and sent to the attester.
+  /credential:
+    get:
+      tags: [Credential]
+      description: Returns the stored credential
+      responses:
+        '200':
+          description: Returns the stored credential
+          content:
+            application/json:
+              examples:
+                Credential:
+                  $ref: '#/components/examples/DDO'
 
 components:
   schemas:    
@@ -76,5 +89,32 @@ components:
         service:
           - serviceEndpoint: 'https://services.kilt.io/messaging'
             type: KiltMessagingService
-      
+    Credential:
+      value:
+        request:
+          claim:
+            cTypeHash: '0x5366521b1cf4497cfe5f17663a7387a87bb8f2c4295d7c40f3140e7ee6afc41b'
+            contents:
+              name: OLI
+              age: 20
+            owner: 4orFteGqT2HMbvPQCfg5YVfHA1EPAswHdRqkmCiAcDYHQAr1
+          claimHashes:
+            - '0x07a2c0b9cf999e248a2a588a2b3198dd659dc40974582a924c036636afce6d27'
+            - '0x6f3dfc08de6d270d35278f8cdad0ee8121ce16b2a41474ede8c596785aa5bab6'
+            - '0xa986d3f8d488fefbf3b09183688afdc1c063bbbd8e02b8f83d57601c90b12a8b'
+          claimNonceMap:
+            '0xe6251fa30a4164b90d9a594b9ae894754179ee60c5ea665e64cdcee8b8d4d71b': 1e753631-d732-4c9b-b250-5757a097438a
+            '0x79ddfb1d42f6b71685d83f383808af9b273748731eecc78ba758722000378dbc': 699dd99a-38d7-43aa-ae95-b4f59e7ee3e9
+            '0x1f0282d2f81c6a38b4fda572c5d1c811c7e4b9fc714e470ff5bab6397f69844c': f58319a7-5358-4d9c-9e9e-edbdefedef39
+          legitimations: []
+          delegationId: null
+          rootHash: '0x748756e1aadb1bb9fcd712cdf269fc2b83ddf466b7a38a7cb1cb437576644a8a'
+          claimerSignature: '0x001c24b7427d7af8124094fd74bca3b6b82e1bb5af39b4fad7acfa3ddd4b1208264e3a0d64efd152336e3be768baf97f5807c33b21e050f996a9d0779c0d0ff100'
+        attestation:
+          claimHash: '0x748756e1aadb1bb9fcd712cdf269fc2b83ddf466b7a38a7cb1cb437576644a8a'
+          cTypeHash: '0x5366521b1cf4497cfe5f17663a7387a87bb8f2c4295d7c40f3140e7ee6afc41b'
+          delegationId: null
+          owner: 4qK4AzHMBQVGKUURU2AJq9Ch8ozgSFEngmo87S7cggqK6kJW
+          revoked: false
+        
 
