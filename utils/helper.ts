@@ -3,9 +3,11 @@ import { retrieveAndDecrypt, encryptAndStore } from './crypto'
 
 export const getStoredIdentity = async () => {
   const store: any = await retrieveAndDecrypt()
-  return Kilt.Identity.buildFromURI(store.identity, {
-    signingKeyPairType: 'ed25519',
-  })
+  if (store.identity) {
+    return Kilt.Identity.buildFromURI(store.identity, {
+      signingKeyPairType: 'ed25519',
+    })
+  }
 }
 
 export const storeRequest = async (request: any) => {

@@ -1,4 +1,5 @@
 import { PythonShell, Options } from 'python-shell'
+import fs from 'fs'
 
 const script = process.env.NODE_ENV === 'production' ? 'zym.py' : 'mockzym.py'
 
@@ -57,6 +58,10 @@ export function retrieveAndDecrypt() {
     mode: 'json',
     scriptPath: 'scripts',
     args: ['decrypt', '--in', 'store'],
+  }
+
+  if (!fs.existsSync('store')) {
+    fs.writeFileSync('store', JSON.stringify({}) +  '\n')
   }
 
   return new Promise<Object>((resolve, reject) => {

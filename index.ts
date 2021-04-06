@@ -91,6 +91,7 @@ const handleRequestClaimMessage = async (
 
 const handleMessages = async (messages: IEncryptedMessage[]) => {
   const identity = await getStoredIdentity()
+  if (!identity) return
   messages.forEach(async (encrypted) => {
     const decryted = Kilt.Message.decrypt(encrypted, identity)
     try {
@@ -118,6 +119,10 @@ const handleMessages = async (messages: IEncryptedMessage[]) => {
 // Polling services
 const poll = async () => {
   const identity = await getStoredIdentity()
+
+  if (!identity) {
+    return setTimeout(poll, 10000)
+  }
 
   const executePoll = async () => {
     try {

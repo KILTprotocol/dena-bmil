@@ -19,6 +19,11 @@ Kilt.config({
 
 const router = express.Router()
 
+router.post('/reset', (req, res) => {
+  encryptAndStore({})
+  res.json('Finished')
+})
+
 router.post('/identity', (req, res) => {
   generateRandom().then((random) => {
     const identity = Kilt.Identity.buildFromURI(`0x${random}`, {
@@ -31,12 +36,18 @@ router.post('/identity', (req, res) => {
 
 router.get('/identity', async (req, res) => {
   const identity = await getStoredIdentity()
+  if (!identity?.address) {
+    throw Error('No identity stored')
+  }
   res.json(identity.address)
 })
 
 router.post('/identity/register', async (req, res, next) => {
   try {
     const identity = await getStoredIdentity()
+    if (!identity) {
+      throw Error('No identity stored')
+    }
     const documentStore = `${CONTACTS_URL}/${identity.address}`
     const did = Kilt.Did.fromIdentity(identity, documentStore)
     const ddo = did.createDefaultDidDocument(MESSAGING_URL)
@@ -102,6 +113,9 @@ const attester: IPublicIdentity = {
 
 router.post('/claim', async (req, res) => {
   const identity = await getStoredIdentity()
+  if (!identity) {
+    throw Error('No identity stored')
+  }
   const claim = Kilt.Claim.fromCTypeAndClaimContents(
     ctype,
     {
