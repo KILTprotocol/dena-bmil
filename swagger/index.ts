@@ -9,6 +9,7 @@
  */
 
 const router = require('../routes')
+const polling = require('../polling')
 
 const swaggerUi = require('swagger-ui-express')
 const YAML = require('yamljs')
@@ -21,6 +22,8 @@ const swaggerFile = YAML.load(__dirname + '/swagger.yml')
 app.use(express.json())
 app.use(router.default)
 app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
+
+polling.poll()
 
 app.listen(3000, () => {
   console.log(
