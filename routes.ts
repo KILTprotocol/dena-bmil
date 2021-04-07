@@ -1,7 +1,6 @@
 import express from 'express'
 import fetch from 'node-fetch'
 import Kilt, {
-  IPublicIdentity,
   IRequestAttestationForClaim,
   Message,
 } from '@kiltprotocol/sdk-js'
@@ -12,6 +11,7 @@ import {
 } from './utils/helper'
 import { MESSAGING_URL, BASE_POST_PARAMS, CONTACTS_URL } from './utils/fetch'
 import { generateRandom, encryptAndStore } from './utils/crypto'
+import { ctype, attester } from './utils/const'
 
 Kilt.config({
   address: 'wss://full-nodes.kilt.io',
@@ -83,33 +83,6 @@ router.post('/identity/register', async (req, res, next) => {
     next(e)
   }
 })
-
-const ctype = Kilt.CType.fromCType({
-  schema: {
-    $id:
-      'kilt:ctype:0x5366521b1cf4497cfe5f17663a7387a87bb8f2c4295d7c40f3140e7ee6afc41b',
-    $schema: 'http://kilt-protocol.org/draft-01/ctype#',
-    title: 'DriversLicense',
-    properties: {
-      name: {
-        type: 'string',
-      },
-      age: {
-        type: 'integer',
-      },
-    },
-    type: 'object',
-  },
-  owner: '4tf4mVShDTGaqZCRHjhH3Wyg9iXuGkKi14mRFVbvq5Tnmk7J',
-  hash: '0x5366521b1cf4497cfe5f17663a7387a87bb8f2c4295d7c40f3140e7ee6afc41b',
-})
-
-const attester: IPublicIdentity = {
-  address: '4qK4AzHMBQVGKUURU2AJq9Ch8ozgSFEngmo87S7cggqK6kJW',
-  boxPublicKeyAsHex:
-    '0x57172b4336a091a06e0a1c5dbbd2a3a70ff953f2bb4a9de439ab4397f734d714',
-  serviceAddress: MESSAGING_URL,
-}
 
 router.post('/claim', async (req, res) => {
   const identity = await getStoredIdentity()
