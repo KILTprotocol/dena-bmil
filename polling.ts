@@ -4,20 +4,24 @@ import Kilt, {
   Identity,
   IEncryptedMessage,
   IPublicIdentity,
+  IRequestAttestationForClaim,
   ISubmitClaimsForCTypes,
   Message,
+  PartialClaim,
 } from '@kiltprotocol/sdk-js'
 import {
   getStoredIdentity,
   storeCredential,
   getStoredRequest,
   getStoredCredential,
+  storeRequest,
 } from './utils/helper'
 import {
   MESSAGING_URL,
   BASE_DELETE_PARAMS,
   BASE_POST_PARAMS,
 } from './utils/fetch'
+import { attester, ctype, delegationRootId } from './utils/const'
 
 const deleteMessage = (messageId: string, identity: Identity) => {
   const signature = identity.signStr(messageId)
@@ -66,6 +70,55 @@ const handleRequestClaimMessage = async (
   }
 }
 
+const handleSubmitTermsMessage = async (
+  identity: Identity,
+  claim: PartialClaim,
+  delegationId?: string
+) => {
+  if (claim.cTypeHash === ctype.hash && delegationId) {
+    const delegationNode = await Kilt.DelegationNode.query(delegationId)
+    const delegationRootNode = await delegationNode?.getRoot()
+
+    if (
+      delegationNode &&
+      delegationRootNode &&
+      delegationRootNode.id === delegationRootId
+    ) {
+      const newClaim = Kilt.Claim.fromCTypeAndClaimContents(
+        ctype,
+        {
+          ...claim.contents,
+        },
+        identity.address
+      )
+
+      const requestForAttestation = Kilt.RequestForAttestation.fromClaimAndIdentity(
+        newClaim,
+        identity,
+        {
+          delegationId,
+        }
+      )
+
+      const messageBody: IRequestAttestationForClaim = {
+        content: { requestForAttestation },
+        type: Kilt.Message.BodyType.REQUEST_ATTESTATION_FOR_CLAIM,
+      }
+      const message = new Message(messageBody, identity, attester)
+      const encrypted = message.encrypt()
+
+      const response = await fetch(MESSAGING_URL, {
+        ...BASE_POST_PARAMS,
+        body: JSON.stringify(encrypted),
+      })
+
+      if (response.ok) {
+        await storeRequest(requestForAttestation)
+      }
+    }
+  }
+}
+
 const handleMessages = async (messages: IEncryptedMessage[]) => {
   const identity = await getStoredIdentity()
   if (!identity) return
@@ -81,9 +134,12 @@ const handleMessages = async (messages: IEncryptedMessage[]) => {
           const { ctypes } = decryted.body.content
           handleRequestClaimMessage(ctypes, identity, {
             address: decryted.senderAddress,
-            boxPublicKeyAsHex: decryted.senderBoxPublicKey
+            boxPublicKeyAsHex: decryted.senderBoxPublicKey,
           })
           break
+        case Kilt.Message.BodyType.SUBMIT_TERMS:
+          const { claim, delegationId } = decryted.body.content
+          handleSubmitTermsMessage(identity, claim, delegationId)
       }
     } catch (e) {
       throw e
