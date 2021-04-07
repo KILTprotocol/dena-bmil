@@ -61,7 +61,7 @@ export function retrieveAndDecrypt() {
   }
 
   if (!fs.existsSync('store')) {
-    fs.writeFileSync('store', JSON.stringify({}) +  '\n')
+    encryptAndStore({})
   }
 
   return new Promise<Object>((resolve, reject) => {
