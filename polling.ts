@@ -1,5 +1,6 @@
 import fetch from 'node-fetch'
 import Kilt, {
+  AttestedClaim,
   IAttestation,
   Identity,
   IEncryptedMessage,
@@ -21,7 +22,7 @@ import {
   BASE_DELETE_PARAMS,
   BASE_POST_PARAMS,
 } from './utils/fetch'
-import { attester, ctype, delegationRootId } from './utils/const'
+import { attester, ctype, delegationRootId, excludedClaimProperties } from './utils/const'
 
 const deleteMessage = (messageId: string, identity: Identity) => {
   const signature = identity.signStr(messageId)
@@ -59,8 +60,22 @@ const handleRequestClaimMessage = async (
 
   if (foundCtype && credential) {
     console.log('✅ Found a credential for provided ctype')
+
+
+    const attClaim = new AttestedClaim(
+      // clone the attestation and request for attestation because properties will be deleted later.
+      JSON.parse(
+        JSON.stringify({
+          request: credential.request,
+          attestation: credential.attestation,
+        })
+      )
+    )
+
+    attClaim.request.removeClaimProperties(excludedClaimProperties)
+
     const messageBody: ISubmitClaimsForCTypes = {
-      content: [credential],
+      content: [attClaim],
       type: Kilt.Message.BodyType.SUBMIT_CLAIMS_FOR_CTYPES,
     }
     const message = new Message(messageBody, identity, verifier)

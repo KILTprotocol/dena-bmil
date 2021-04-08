@@ -10,6 +10,8 @@ export const attester: IPublicIdentity = {
 
 export const delegationRootId = "0xe5059302753ec79d6cbfaffdbd1f6e0eb55a6c016d94af10d224014242173b95"
 
+export const excludedClaimProperties = ['Laengengrad', 'Breitengrad']
+
 export const ctype = Kilt.CType.fromCType({
   schema: {
     $schema: 'http://kilt-protocol.org/draft-01/ctype#',
