@@ -35,11 +35,13 @@ const handleAttestationMessage = async (attestation: IAttestation) => {
   console.log(attestation)
   const request = await getStoredRequest()
   if (request) {
+    console.log('✅ Attestation matches previous Request')
     const credential = Kilt.AttestedClaim.fromRequestAndAttestation(
       request,
       attestation
     )
     await storeCredential(credential)
+    console.log('👍 Credential stored!')
   }
 }
 
@@ -56,6 +58,7 @@ const handleRequestClaimMessage = async (
   })
 
   if (foundCtype && credential) {
+    console.log('✅ Found a credential for provided ctype')
     const messageBody: ISubmitClaimsForCTypes = {
       content: [credential],
       type: Kilt.Message.BodyType.SUBMIT_CLAIMS_FOR_CTYPES,
@@ -67,23 +70,34 @@ const handleRequestClaimMessage = async (
       ...BASE_POST_PARAMS,
       body: JSON.stringify(encrypted),
     })
+
+    if (response.ok) {
+      console.log('👍 Credential sent!')
+    }
+  }
+  else {
+    console.log(`❌ No credential found for provided ctypes!`)
   }
 }
 
 const handleSubmitTermsMessage = async (
   identity: Identity,
   claim: PartialClaim,
-  delegationId?: string
+  delegationId?: string,
 ) => {
   if (claim.cTypeHash === ctype.hash && delegationId) {
+    
     const delegationNode = await Kilt.DelegationNode.query(delegationId)
     const delegationRootNode = await delegationNode?.getRoot()
+
+    console.log('✅ CTYPE matches')
 
     if (
       delegationNode &&
       delegationRootNode &&
       delegationRootNode.id === delegationRootId
     ) {
+      console.log('✅ Delegation Root matches')
       const newClaim = Kilt.Claim.fromCTypeAndClaimContents(
         ctype,
         {
@@ -114,8 +128,14 @@ const handleSubmitTermsMessage = async (
 
       if (response.ok) {
         await storeRequest(requestForAttestation)
+        console.log('👍 Terms accepted and Request For Attestation signed and sent!')
       }
+    } else {
+      console.log('❌ Delegation root node does not match!')
     }
+  }
+  else {
+    console.log(`❌ Ctype doesn't match!`)
   }
 }
 
@@ -128,23 +148,26 @@ const handleMessages = async (messages: IEncryptedMessage[]) => {
       switch (decryted.body.type) {
         case Kilt.Message.BodyType.SUBMIT_ATTESTATION_FOR_CLAIM:
           const { attestation } = decryted.body.content
-          handleAttestationMessage(attestation)
+          console.log(`⏱  Processing Attestation submission from ${decryted.senderAddress}`)
+          await handleAttestationMessage(attestation)
           break
         case Kilt.Message.BodyType.REQUEST_CLAIMS_FOR_CTYPES:
           const { ctypes } = decryted.body.content
-          handleRequestClaimMessage(ctypes, identity, {
+          console.log(`⏱  Processing Request For Claims from ${decryted.senderAddress}`)
+          await handleRequestClaimMessage(ctypes, identity, {
             address: decryted.senderAddress,
             boxPublicKeyAsHex: decryted.senderBoxPublicKey,
           })
           break
         case Kilt.Message.BodyType.SUBMIT_TERMS:
           const { claim, delegationId } = decryted.body.content
-          handleSubmitTermsMessage(identity, claim, delegationId)
+          console.log(`⏱  Processing Terms from ${decryted.senderAddress}`)
+          await handleSubmitTermsMessage(identity, claim, delegationId)
       }
     } catch (e) {
       throw e
     } finally {
-      if (decryted.messageId) deleteMessage(decryted.messageId, identity)
+      if (decryted.messageId) await deleteMessage(decryted.messageId, identity)
     }
   })
 }

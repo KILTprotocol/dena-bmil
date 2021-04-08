@@ -44,9 +44,11 @@ export function encryptAndStore(object: Object) {
   // end the input stream and allow the process to exit
   pyshell.end(function (err, code, signal) {
     if (err) throw err
-    console.log('The exit code was: ' + code)
-    console.log('The exit signal was: ' + signal)
-    console.log('finished')
+    if (code !== 0) {
+      console.log('The exit code was: ' + code)
+      console.log('The exit signal was: ' + signal)
+      console.log('finished')
+    }
   })
 }
 
@@ -80,9 +82,11 @@ export function retrieveAndDecrypt() {
         return reject(new Error('Error while decrypting and receiving store'))
       }
       resolve(messages[0])
-      console.log('The exit code was: ' + code)
-      console.log('The exit signal was: ' + signal)
-      console.log('finished')
+      if (code !== 0) {
+        console.log('The exit code was: ' + code)
+        console.log('The exit signal was: ' + signal)
+        console.log('finished')
+        }
     })
   })
 }

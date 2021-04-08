@@ -21,6 +21,7 @@ const router = express.Router()
 
 router.post('/reset', (req, res) => {
   encryptAndStore({})
+  console.log('👍 Application reset!')
   res.json('Finished')
 })
 
@@ -30,6 +31,7 @@ router.post('/identity', (req, res) => {
       signingKeyPairType: 'ed25519',
     })
     encryptAndStore({ identity: identity.seedAsHex })
+    console.log('👍 New identity created and stored!')
     res.json(identity.address)
   })
 })
@@ -39,6 +41,7 @@ router.get('/identity', async (req, res) => {
   if (!identity?.address) {
     throw Error('No identity stored')
   }
+  console.log('👍 Stored identity returned!')
   res.json(identity.address)
 })
 
@@ -48,6 +51,7 @@ router.post('/identity/register', async (req, res, next) => {
     if (!identity) {
       throw Error('No identity stored')
     }
+    console.log(`⏱  Starting to register identity as DID`)
     const documentStore = `${CONTACTS_URL}/${identity.address}`
     const did = Kilt.Did.fromIdentity(identity, documentStore)
     const ddo = did.createDefaultDidDocument(MESSAGING_URL)
@@ -73,10 +77,14 @@ router.post('/identity/register', async (req, res, next) => {
       )
     }
 
+    console.log('✅ Off-chain DID document stored')
+
     const tx = await did.store(identity)
     const txResult = await Kilt.BlockchainUtils.submitSignedTx(tx, {
       resolveOn: Kilt.BlockchainUtils.IS_IN_BLOCK,
     })
+
+    console.log('👍 Identity successfully registered as DID on chain!')
 
     res.json(ddo)
   } catch (e) {
@@ -119,11 +127,14 @@ router.post('/claim', async (req, res) => {
     await storeRequest(requestForAttestation)
   }
 
+  console.log('👍 Example claim generated and Request For Attestation sent!')
+
   res.json('Finished')
 })
 
 router.get('/credential', async (req, res) => {
   const credential = await getStoredCredential()
+  console.log('👍 Stored credential returned!')
   res.json(credential)
 })
 
