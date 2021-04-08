@@ -174,18 +174,16 @@ const handleMessages = async (messages: IEncryptedMessage[]) => {
 
 // Polling services
 export const poll = async () => {
-  const identity = await getStoredIdentity()
-
-  if (!identity) {
-    return setTimeout(poll, 10000)
-  }
-
   const executePoll = async () => {
+    const identity = await getStoredIdentity()
+    if (!identity) {
+      return setTimeout(executePoll, 10000)
+    }
     try {
       const response = await fetch(`${MESSAGING_URL}/inbox/${identity.address}`)
       if (response.ok) {
         const messages = await response.json()
-        if (messages && messages.length > 0) handleMessages(messages)
+        if (messages && messages.length > 0) await handleMessages(messages)
       }
     } catch (e) {
       console.error(e)
