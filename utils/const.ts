@@ -8,7 +8,7 @@ export const attester: IPublicIdentity = {
   serviceAddress: MESSAGING_URL,
 }
 
-export const delegationRootId = "0x7d65d67d6bb547e6f5df19be7fc21593ee374ea34730c21ea3a623b042de56c4"
+export const delegationRootId = "0x24c8098ed324b03e602402c8e97bc8524f44ff23c4ca9d2343ff278bed809400"
 
 export const excludedClaimProperties = ['Laengengrad', 'Breitengrad']
 
