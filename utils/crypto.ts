@@ -60,7 +60,7 @@ export function encryptAndStore(object: Object) {
  */
 export async function retrieveAndDecrypt() {
   const options: Options = {
-    mode: 'json',
+    mode: 'text',
     scriptPath: 'scripts',
     args: ['decrypt', '--in', 'store'],
   }
@@ -81,10 +81,11 @@ export async function retrieveAndDecrypt() {
     // end the input stream and allow the process to exit
     pyshell.end(function (err, code, signal) {
       if (err) return reject(err)
-      if (typeof messages[0] !== 'object') {
+      if (typeof messages[0] !== 'string') {
         return reject(new Error('Error while decrypting and receiving store'))
       }
-      resolve(messages[0])
+      const parsed = JSON.parse(messages[0])
+      resolve(parsed)
       if (code !== 0) {
         console.log('The exit code was: ' + code)
         console.log('The exit signal was: ' + signal)
