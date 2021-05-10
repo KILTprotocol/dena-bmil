@@ -33,29 +33,32 @@ export function encryptAndStore(object: Object) {
     args: ['encrypt', '--out', 'store'],
   }
 
-  const pyshell = new PythonShell(script, options)
+  return new Promise<string>((resolve, reject) => {
+    const pyshell = new PythonShell(script, options)
 
-  pyshell.send(JSON.stringify(object))
+    pyshell.send(JSON.stringify(object))
 
-  pyshell.on('message', function (message) {
-    console.log(message)
-  })
+    pyshell.on('message', function (message) {
+      console.log(message)
+    })
 
-  // end the input stream and allow the process to exit
-  pyshell.end(function (err, code, signal) {
-    if (err) throw err
-    if (code !== 0) {
-      console.log('The exit code was: ' + code)
-      console.log('The exit signal was: ' + signal)
-      console.log('finished')
-    }
+    // end the input stream and allow the process to exit
+    pyshell.end(function (err, code, signal) {
+      if (err) return reject(err)
+      resolve('ok')
+      if (code !== 0) {
+        console.log('The exit code was: ' + code)
+        console.log('The exit signal was: ' + signal)
+        console.log('finished')
+      }
+    })
   })
 }
 
 /**
  * Decrypt
  */
-export function retrieveAndDecrypt() {
+export async function retrieveAndDecrypt() {
   const options: Options = {
     mode: 'json',
     scriptPath: 'scripts',
@@ -63,7 +66,7 @@ export function retrieveAndDecrypt() {
   }
 
   if (!fs.existsSync('store')) {
-    encryptAndStore({})
+    await encryptAndStore({})
   }
 
   return new Promise<Object>((resolve, reject) => {
@@ -74,7 +77,7 @@ export function retrieveAndDecrypt() {
       // received a message sent from the Python script
       messages.push(message)
     })
-  
+
     // end the input stream and allow the process to exit
     pyshell.end(function (err, code, signal) {
       if (err) return reject(err)
@@ -86,7 +89,7 @@ export function retrieveAndDecrypt() {
         console.log('The exit code was: ' + code)
         console.log('The exit signal was: ' + signal)
         console.log('finished')
-        }
+      }
     })
   })
 }

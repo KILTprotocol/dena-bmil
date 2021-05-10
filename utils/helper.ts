@@ -16,7 +16,7 @@ export const storeRequest = async (request: any) => {
     ...store,
     request,
   }
-  encryptAndStore(newStore)
+  await encryptAndStore(newStore)
 }
 
 export const getStoredRequest = async () => {
@@ -33,7 +33,7 @@ export const storeCredential = async (credential: any) => {
     credential,
   }
   delete newStore.request
-  encryptAndStore(newStore)
+  await encryptAndStore(newStore)
 }
 
 export const getStoredCredential = async () => {

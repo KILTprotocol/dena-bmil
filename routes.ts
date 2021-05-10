@@ -20,9 +20,10 @@ Kilt.config({
 const router = express.Router()
 
 router.post('/reset', (req, res) => {
-  encryptAndStore({})
-  console.log('👍 Application reset!')
-  res.json('Finished')
+  encryptAndStore({}).then(() => {
+    console.log('👍 Application reset!')
+    res.json('Finished')
+  })
 })
 
 router.post('/identity', (req, res) => {
@@ -30,9 +31,10 @@ router.post('/identity', (req, res) => {
     const identity = Kilt.Identity.buildFromURI(`0x${random}`, {
       signingKeyPairType: 'ed25519',
     })
-    encryptAndStore({ identity: identity.seedAsHex })
-    console.log('👍 New identity created and stored!')
-    res.json(identity.address)
+    encryptAndStore({ identity: identity.seedAsHex }).then(() => {
+      console.log('👍 New identity created and stored!')
+      res.json(identity.address)
+    })
   })
 })
 
