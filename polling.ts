@@ -167,7 +167,7 @@ const handleMessages = async (messages: IEncryptedMessage[]) => {
           await handleAttestationMessage(attestation)
           break
         case Kilt.Message.BodyType.REQUEST_CLAIMS_FOR_CTYPES:
-          const { ctypes } = decryted.body.content
+          const ctypes = decryted.body.content.map(request => request.cTypeHash)
           console.log(`⏱  Processing Request For Claims from ${decryted.senderAddress}`)
           await handleRequestClaimMessage(ctypes, identity, {
             address: decryted.senderAddress,

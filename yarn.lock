@@ -14,54 +14,54 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kiltprotocol/actors-api@npm:0.20.0":
-  version: 0.20.0
-  resolution: "@kiltprotocol/actors-api@npm:0.20.0"
+"@kiltprotocol/actors-api@npm:0.21.0":
+  version: 0.21.0
+  resolution: "@kiltprotocol/actors-api@npm:0.21.0"
   dependencies:
-    "@kiltprotocol/chain-helpers": 0.20.0
-    "@kiltprotocol/config": 0.20.0
-    "@kiltprotocol/core": 0.20.0
-    "@kiltprotocol/messaging": 0.20.0
-    "@kiltprotocol/types": 0.20.0
-    "@kiltprotocol/utils": 0.20.0
-  checksum: dc53d807bf18136a20f55d87201b845583fb41df2d516c7d6ee6bdd876b6ce4a0302a96f9c36074c5b7a48016d13012dba8bbd260b7f4f2386b07e9446b662a1
+    "@kiltprotocol/chain-helpers": 0.21.0
+    "@kiltprotocol/config": 0.21.0
+    "@kiltprotocol/core": 0.21.0
+    "@kiltprotocol/messaging": 0.21.0
+    "@kiltprotocol/types": 0.21.0
+    "@kiltprotocol/utils": 0.21.0
+  checksum: ca6ec27a0ac388a5855e2f28339b284c2e60993d880a27cfa08d14d0cbfd1ad0f834e44bdecf05ae9f1b5945fe2b3f1107d20bcc711b901c8fc8cea6f2306ee3
   languageName: node
   linkType: hard
 
-"@kiltprotocol/chain-helpers@npm:0.20.0":
-  version: 0.20.0
-  resolution: "@kiltprotocol/chain-helpers@npm:0.20.0"
+"@kiltprotocol/chain-helpers@npm:0.21.0":
+  version: 0.21.0
+  resolution: "@kiltprotocol/chain-helpers@npm:0.21.0"
   dependencies:
-    "@kiltprotocol/config": 0.20.0
-    "@kiltprotocol/types": 0.20.0
-    "@kiltprotocol/utils": 0.20.0
+    "@kiltprotocol/config": 0.21.0
+    "@kiltprotocol/types": 0.21.0
+    "@kiltprotocol/utils": 0.21.0
     "@polkadot/api": ^3.11.1
     "@polkadot/keyring": ^5.9.2
     "@polkadot/types": ^3.11.1
-    bn.js: ^5.2.0
+    bn.js: ^4.11.9
     typescript-logging: ^0.6.4
-  checksum: fbbe203a5efd18980036c457d2071937597a57f721c20fa00d63f2ddd1d6995d496594bf8fdc3b6946e506e715b0ae081a035089d168fed2fcba01025cf25784
+  checksum: dbd7517cbe06a09e8ed0a5c3887f8a776b44d911e6220d5ab1af54eb900338d5efbd6d4aa0549992a8a63525b07fae87e870a1857ad73d531afda3b8e5185f95
   languageName: node
   linkType: hard
 
-"@kiltprotocol/config@npm:0.20.0":
-  version: 0.20.0
-  resolution: "@kiltprotocol/config@npm:0.20.0"
+"@kiltprotocol/config@npm:0.21.0":
+  version: 0.21.0
+  resolution: "@kiltprotocol/config@npm:0.21.0"
   dependencies:
-    "@kiltprotocol/utils": 0.20.0
+    "@kiltprotocol/utils": 0.21.0
     typescript-logging: ^0.6.4
-  checksum: 7c92c0cbb79dc4bf17dc677b4eca899693a023ed64566d4f17a2f9a26d206323f0bf6d205ba5d2e7c44c014312df64b6c04c48451f9a0267bebeeb106dadf0fc
+  checksum: 13ba1a3683ad2795ccfb5e6c8431cc3571bbcee580cc9c92330c19e9b3343367c82c1436478f6abcaf3c6658ddf5929aa81cccc238e69444e4db7b18cdb14481
   languageName: node
   linkType: hard
 
-"@kiltprotocol/core@npm:0.20.0":
-  version: 0.20.0
-  resolution: "@kiltprotocol/core@npm:0.20.0"
+"@kiltprotocol/core@npm:0.21.0":
+  version: 0.21.0
+  resolution: "@kiltprotocol/core@npm:0.21.0"
   dependencies:
-    "@kiltprotocol/chain-helpers": 0.20.0
-    "@kiltprotocol/config": 0.20.0
-    "@kiltprotocol/types": 0.20.0
-    "@kiltprotocol/utils": 0.20.0
+    "@kiltprotocol/chain-helpers": 0.21.0
+    "@kiltprotocol/config": 0.21.0
+    "@kiltprotocol/types": 0.21.0
+    "@kiltprotocol/utils": 0.21.0
     "@polkadot/api": ^3.11.1
     "@polkadot/keyring": ^5.9.2
     "@polkadot/types": ^3.11.1
@@ -69,63 +69,63 @@ __metadata:
     "@polkadot/util": ^5.9.2
     "@polkadot/util-crypto": ^5.9.2
     ajv: ^6.12.5
-    bn.js: ^5.2.0
+    bn.js: ^4.11.9
     tweetnacl: ^1.0.3
     typescript-logging: ^0.6.4
-  checksum: 13f3906ee7ad540fb21a8afb04f73ae2cdd220ab00b2cc1238c1766790d407ff45222965a678417991be5f183ee2a3c6082606cc0cafd45e3e6480a79dbece05
+  checksum: 55068d24a74af624abf454f26f127af4774c7d20668edfbb9ae56e541772b74cd1e8369c6686400eec2cf41ee59a0c1e68b856f07b84f4d267b25db195ce9677
   languageName: node
   linkType: hard
 
-"@kiltprotocol/messaging@npm:0.20.0":
-  version: 0.20.0
-  resolution: "@kiltprotocol/messaging@npm:0.20.0"
+"@kiltprotocol/messaging@npm:0.21.0":
+  version: 0.21.0
+  resolution: "@kiltprotocol/messaging@npm:0.21.0"
   dependencies:
-    "@kiltprotocol/core": 0.20.0
-    "@kiltprotocol/types": 0.20.0
-    "@kiltprotocol/utils": 0.20.0
-  checksum: 475b18b9ee437bb4ace0b611d50fa5d83f6c6e21401d1b2e23a9d11b6133f71d19d9fb2cae57558d1180122cabde39d3934e526c2e4988c3e4ca6ffb2b561432
+    "@kiltprotocol/core": 0.21.0
+    "@kiltprotocol/types": 0.21.0
+    "@kiltprotocol/utils": 0.21.0
+  checksum: 632a625714759d525b67ef72b07cd9ef54e1b76a7db8542b6ac8a99e24f737d759c286c8eef0d5ad8503deadaa42f2fc505c7c59c18465cbe72e9be19825968e
   languageName: node
   linkType: hard
 
-"@kiltprotocol/sdk-js@npm:0.20.0":
-  version: 0.20.0
-  resolution: "@kiltprotocol/sdk-js@npm:0.20.0"
+"@kiltprotocol/sdk-js@npm:0.21.0":
+  version: 0.21.0
+  resolution: "@kiltprotocol/sdk-js@npm:0.21.0"
   dependencies:
-    "@kiltprotocol/actors-api": 0.20.0
-    "@kiltprotocol/chain-helpers": 0.20.0
-    "@kiltprotocol/core": 0.20.0
-    "@kiltprotocol/messaging": 0.20.0
-    "@kiltprotocol/types": 0.20.0
-    "@kiltprotocol/utils": 0.20.0
-  checksum: 13f274e097633f0a7b7150f8e8066b206924b0134f6ca30bd89a6711cfb8963a5979cafacdae98949f575734ea31d31bd683c32684ffac667b249bf982a39335
+    "@kiltprotocol/actors-api": 0.21.0
+    "@kiltprotocol/chain-helpers": 0.21.0
+    "@kiltprotocol/core": 0.21.0
+    "@kiltprotocol/messaging": 0.21.0
+    "@kiltprotocol/types": 0.21.0
+    "@kiltprotocol/utils": 0.21.0
+  checksum: f57b27c5a83ee2de5b9fa550a3bebd3fe45aace6c1339b1ff61af77208a8f0c99755db98854ccc5c56b6cd3eb362b63af691e581e3ea96c68b426cabc2fe0e5e
   languageName: node
   linkType: hard
 
-"@kiltprotocol/types@npm:0.20.0":
-  version: 0.20.0
-  resolution: "@kiltprotocol/types@npm:0.20.0"
+"@kiltprotocol/types@npm:0.21.0":
+  version: 0.21.0
+  resolution: "@kiltprotocol/types@npm:0.21.0"
   dependencies:
     "@polkadot/api": ^3.11.1
     "@polkadot/keyring": ^5.9.2
     "@polkadot/types": ^3.11.1
-    bn.js: ^5.2.0
+    bn.js: ^4.11.9
     tweetnacl: ^1.0.3
-  checksum: 63fdc7e1ce86199f4b6fcc66f366af2af22f9eefcf6ea5e113bb394bcc99c719a494acc4c119ae3b5a08bed1f1365286f63966dc872777faa4e9f9bb0a2149f7
+  checksum: 93b89349f48f5adeeaa2100dc604223146391488eddf66d4b8eb31110122c6de624be8d3fc81ab157af82f416b9379a7345906b4d2df05b44bafe95ebe7f4022
   languageName: node
   linkType: hard
 
-"@kiltprotocol/utils@npm:0.20.0":
-  version: 0.20.0
-  resolution: "@kiltprotocol/utils@npm:0.20.0"
+"@kiltprotocol/utils@npm:0.21.0":
+  version: 0.21.0
+  resolution: "@kiltprotocol/utils@npm:0.21.0"
   dependencies:
-    "@kiltprotocol/types": 0.20.0
+    "@kiltprotocol/types": 0.21.0
     "@polkadot/keyring": ^5.9.2
     "@polkadot/types": ^3.11.1
     "@polkadot/util": ^5.9.2
     "@polkadot/util-crypto": ^5.9.2
     tweetnacl: ^1.0.3
     uuid: ^8.1.0
-  checksum: 50ee325c5cbdb041e389fd3df4adb0587aeb204d859a0be4b4503b557468f43e7b720ea1ea8f5474616335408a9510163e78995de66817b814c6d5623d501bf3
+  checksum: b0e8e9f2eb1bbab48de2636c11e1c151267830855acb90553e0e51bff740c421d4d8e19f2c1e1b31ae7c7c71328e5699d45b8d61b5d7ffceb50e2701a8b73733
   languageName: node
   linkType: hard
 
@@ -719,13 +719,6 @@ __metadata:
   version: 4.11.9
   resolution: "bn.js@npm:4.11.9"
   checksum: 31630d3560b28931010980886a0f657b37ce818ba237867cd838e89a1a0b71044fb4977aa56376616997b372bbb3f55d3bb25e5378c48c1d24a47bfb4235b60e
-  languageName: node
-  linkType: hard
-
-"bn.js@npm:^5.2.0":
-  version: 5.2.0
-  resolution: "bn.js@npm:5.2.0"
-  checksum: 7a73bdbba63013a7f9953fbbd6ea3351e4cf36d6fdbb5adf7969fcd65255b9c04f2994b0132d89d74ffe608a0eb5a48322526bee20c0e03e71e502603b420f63
   languageName: node
   linkType: hard
 
@@ -2083,7 +2076,7 @@ fsevents@~2.3.1:
   version: 0.0.0-use.local
   resolution: "oli-kilt@workspace:."
   dependencies:
-    "@kiltprotocol/sdk-js": 0.20.0
+    "@kiltprotocol/sdk-js": 0.21.0
     "@types/express": ^4.17.11
     express: ^4.17.1
     node-fetch: ^2.6.1

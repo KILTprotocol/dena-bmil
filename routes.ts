@@ -81,8 +81,8 @@ router.post('/identity/register', async (req, res, next) => {
 
     console.log('✅ Off-chain DID document stored')
 
-    const tx = await did.store(identity)
-    const txResult = await Kilt.BlockchainUtils.submitSignedTx(tx, {
+    const tx = await did.store()
+    const txResult = await Kilt.BlockchainUtils.signAndSubmitTx(tx, identity, {
       resolveOn: Kilt.BlockchainUtils.IS_IN_BLOCK,
     })
 
