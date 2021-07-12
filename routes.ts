@@ -117,7 +117,11 @@ router.post('/claim', async (req, res) => {
     content: { requestForAttestation },
     type: Kilt.Message.BodyType.REQUEST_ATTESTATION_FOR_CLAIM,
   }
-  const message = new Message(messageBody, identity.getPublicIdentity(), attester)
+  const message = new Message(
+    messageBody,
+    identity.getPublicIdentity(),
+    attester
+  )
   const encrypted = message.encrypt(identity, attester)
 
   const response = await fetch(MESSAGING_URL, {
