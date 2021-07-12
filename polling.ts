@@ -78,8 +78,8 @@ const handleRequestClaimMessage = async (
       content: [attClaim],
       type: Kilt.Message.BodyType.SUBMIT_CLAIMS_FOR_CTYPES,
     }
-    const message = new Message(messageBody, identity, verifier)
-    const encrypted = message.encrypt()
+    const message = new Message(messageBody, identity.getPublicIdentity(), verifier)
+    const encrypted = message.encrypt(identity, verifier)
 
     const response = await fetch(MESSAGING_URL, {
       ...BASE_POST_PARAMS,
@@ -133,8 +133,8 @@ const handleSubmitTermsMessage = async (
         content: { requestForAttestation },
         type: Kilt.Message.BodyType.REQUEST_ATTESTATION_FOR_CLAIM,
       }
-      const message = new Message(messageBody, identity, attester)
-      const encrypted = message.encrypt()
+      const message = new Message(messageBody, identity.getPublicIdentity(), attester)
+      const encrypted = message.encrypt(identity, attester)
 
       const response = await fetch(MESSAGING_URL, {
         ...BASE_POST_PARAMS,
