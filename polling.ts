@@ -22,7 +22,12 @@ import {
   BASE_DELETE_PARAMS,
   BASE_POST_PARAMS,
 } from './utils/fetch'
-import { attester, ctype, delegationRootId, excludedClaimProperties } from './utils/const'
+import {
+  attester,
+  ctype,
+  delegationRootId,
+  excludedClaimProperties,
+} from './utils/const'
 
 const deleteMessage = (messageId: string, identity: Identity) => {
   const signature = identity.signStr(messageId)
@@ -61,7 +66,6 @@ const handleRequestClaimMessage = async (
   if (foundCtype && credential) {
     console.log('✅ Found a credential for provided ctype')
 
-
     const attClaim = new AttestedClaim(
       // clone the attestation and request for attestation because properties will be deleted later.
       JSON.parse(
@@ -78,7 +82,11 @@ const handleRequestClaimMessage = async (
       content: [attClaim],
       type: Kilt.Message.BodyType.SUBMIT_CLAIMS_FOR_CTYPES,
     }
-    const message = new Message(messageBody, identity.getPublicIdentity(), verifier)
+    const message = new Message(
+      messageBody,
+      identity.getPublicIdentity(),
+      verifier
+    )
     const encrypted = message.encrypt(identity, verifier)
 
     const response = await fetch(MESSAGING_URL, {
@@ -89,8 +97,7 @@ const handleRequestClaimMessage = async (
     if (response.ok) {
       console.log('👍 Credential sent!')
     }
-  }
-  else {
+  } else {
     console.log(`❌ No credential found for provided ctypes!`)
   }
 }
@@ -98,10 +105,9 @@ const handleRequestClaimMessage = async (
 const handleSubmitTermsMessage = async (
   identity: Identity,
   claim: PartialClaim,
-  delegationId?: string,
+  delegationId?: string
 ) => {
   if (claim.cTypeHash === ctype.hash && delegationId) {
-    
     const delegationNode = await Kilt.DelegationNode.query(delegationId)
     const delegationRootNode = await delegationNode?.getRoot()
 
@@ -121,19 +127,20 @@ const handleSubmitTermsMessage = async (
         identity.address
       )
 
-      const requestForAttestation = Kilt.RequestForAttestation.fromClaimAndIdentity(
-        newClaim,
-        identity,
-        {
+      const requestForAttestation =
+        Kilt.RequestForAttestation.fromClaimAndIdentity(newClaim, identity, {
           delegationId,
-        }
-      )
+        })
 
       const messageBody: IRequestAttestationForClaim = {
         content: { requestForAttestation },
         type: Kilt.Message.BodyType.REQUEST_ATTESTATION_FOR_CLAIM,
       }
-      const message = new Message(messageBody, identity.getPublicIdentity(), attester)
+      const message = new Message(
+        messageBody,
+        identity.getPublicIdentity(),
+        attester
+      )
       const encrypted = message.encrypt(identity, attester)
 
       const response = await fetch(MESSAGING_URL, {
@@ -143,13 +150,14 @@ const handleSubmitTermsMessage = async (
 
       if (response.ok) {
         await storeRequest(requestForAttestation)
-        console.log('👍 Terms accepted and Request For Attestation signed and sent!')
+        console.log(
+          '👍 Terms accepted and Request For Attestation signed and sent!'
+        )
       }
     } else {
       console.log('❌ Delegation root node does not match!')
     }
-  }
-  else {
+  } else {
     console.log(`❌ Ctype doesn't match!`)
   }
 }
@@ -157,18 +165,25 @@ const handleSubmitTermsMessage = async (
 const handleMessages = async (messages: IEncryptedMessage[]) => {
   const identity = await getStoredIdentity()
   if (!identity) return
-  messages.forEach(async (encrypted) => {
+
+  for (const encrypted of messages) {
     const decryted = Kilt.Message.decrypt(encrypted, identity)
     try {
       switch (decryted.body.type) {
         case Kilt.Message.BodyType.SUBMIT_ATTESTATION_FOR_CLAIM:
           const { attestation } = decryted.body.content
-          console.log(`⏱  Processing Attestation submission from ${decryted.senderAddress}`)
+          console.log(
+            `⏱  Processing Attestation submission from ${decryted.senderAddress}`
+          )
           await handleAttestationMessage(attestation)
           break
         case Kilt.Message.BodyType.REQUEST_CLAIMS_FOR_CTYPES:
-          const ctypes = decryted.body.content.map(request => request.cTypeHash)
-          console.log(`⏱  Processing Request For Claims from ${decryted.senderAddress}`)
+          const ctypes = decryted.body.content.map(
+            (request) => request.cTypeHash
+          )
+          console.log(
+            `⏱  Processing Request For Claims from ${decryted.senderAddress}`
+          )
           await handleRequestClaimMessage(ctypes, identity, {
             address: decryted.senderAddress,
             boxPublicKeyAsHex: decryted.senderBoxPublicKey,
@@ -184,7 +199,7 @@ const handleMessages = async (messages: IEncryptedMessage[]) => {
     } finally {
       if (decryted.messageId) await deleteMessage(decryted.messageId, identity)
     }
-  })
+  }
 }
 
 // Polling services
