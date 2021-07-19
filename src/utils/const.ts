@@ -8,7 +8,8 @@ export const attester: IPublicIdentity = {
   serviceAddress: MESSAGING_URL,
 }
 
-export const delegationRootId = "0x24c8098ed324b03e602402c8e97bc8524f44ff23c4ca9d2343ff278bed809400"
+export const delegationRootId =
+  '0x24c8098ed324b03e602402c8e97bc8524f44ff23c4ca9d2343ff278bed809400'
 
 export const excludedClaimProperties = ['Laengengrad', 'Breitengrad']
 
@@ -63,9 +64,24 @@ export const ctype = Kilt.CType.fromCType({
       },
     },
     type: 'object',
-    $id:
-      'kilt:ctype:0x001b0560ebee835f73a8c8b91391af8f3a8da985d5a7816e2c4aa0d787440374',
+    $id: 'kilt:ctype:0x001b0560ebee835f73a8c8b91391af8f3a8da985d5a7816e2c4aa0d787440374',
   },
   owner: '4rC2bbX2AC6Hptw45KmFNBGi1varGFujBFcBVAZKEZvLiVDe',
   hash: '0x001b0560ebee835f73a8c8b91391af8f3a8da985d5a7816e2c4aa0d787440374',
+})
+
+export const energyWebCtype = Kilt.CType.fromCType({
+  schema: {
+    $schema: 'http://kilt-protocol.org/draft-01/ctype#',
+    title: 'EnergyWeb Role Credential',
+    properties: {
+      role: {
+        type: 'string',
+      },
+    },
+    type: 'object',
+    $id: 'kilt:ctype:0x59afdc96e89af9b342d1bde1b7ba5375124275f04e1f4a3459df3266957e3791',
+  },
+  owner: '4rQ2vmWQsxcKwxjzLcPqke593vNiJ6p6sc6zdUus6PTTVLU6',
+  hash: '0x59afdc96e89af9b342d1bde1b7ba5375124275f04e1f4a3459df3266957e3791',
 })

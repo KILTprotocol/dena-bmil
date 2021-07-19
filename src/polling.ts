@@ -16,6 +16,9 @@ import {
   getStoredRequest,
   getStoredCredential,
   storeRequest,
+  store,
+  retrieve,
+  getStoredEnergyWebCredential,
 } from './utils/helper'
 import {
   MESSAGING_URL,
@@ -27,6 +30,7 @@ import {
   ctype,
   delegationRootId,
   excludedClaimProperties,
+  energyWebCtype,
 } from './utils/const'
 
 const deleteMessage = (messageId: string, identity: Identity) => {
@@ -40,13 +44,24 @@ const deleteMessage = (messageId: string, identity: Identity) => {
 const handleAttestationMessage = async (attestation: IAttestation) => {
   console.log(attestation)
   const request = await getStoredRequest()
-  if (request) {
+  const energyWebRequest = await retrieve('energyWebRequest')
+  if (request && request.rootHash === attestation.claimHash) {
     console.log('✅ Attestation matches previous Request')
     const credential = Kilt.AttestedClaim.fromRequestAndAttestation(
       request,
       attestation
     )
     await storeCredential(credential)
+    console.log('👍 Credential stored!')
+  } else if (energyWebRequest && energyWebRequest.rootHash === attestation.claimHash) {
+    console.log(
+      '✅ Attestation matches previous Request: EnergyWeb Role Credential'
+    )
+    const credential = Kilt.AttestedClaim.fromRequestAndAttestation(
+      energyWebRequest,
+      attestation
+    )
+    await store('energyWebCredential', credential, 'energyWebRequest')
     console.log('👍 Credential stored!')
   }
 }
@@ -57,13 +72,21 @@ const handleRequestClaimMessage = async (
   verifier: IPublicIdentity
 ) => {
   const credential = await getStoredCredential()
+  const energyWebCredential = await getStoredEnergyWebCredential()
   const foundCtype = ctypes.find((ctypeHash) => {
-    if (credential?.request.claim.cTypeHash === ctypeHash) {
+    if (
+      credential?.request.claim.cTypeHash === ctypeHash ||
+      energyWebCredential?.request.claim.cTypeHash === ctypeHash
+    ) {
       return credential
     }
   })
 
-  if (foundCtype && credential) {
+  if (
+    foundCtype &&
+    foundCtype === credential?.request.claim.cTypeHash &&
+    credential
+  ) {
     console.log('✅ Found a credential for provided ctype')
 
     const attClaim = new AttestedClaim(
@@ -80,6 +103,32 @@ const handleRequestClaimMessage = async (
 
     const messageBody: ISubmitClaimsForCTypes = {
       content: [attClaim],
+      type: Kilt.Message.BodyType.SUBMIT_CLAIMS_FOR_CTYPES,
+    }
+    const message = new Message(
+      messageBody,
+      identity.getPublicIdentity(),
+      verifier
+    )
+    const encrypted = message.encrypt(identity, verifier)
+
+    const response = await fetch(MESSAGING_URL, {
+      ...BASE_POST_PARAMS,
+      body: JSON.stringify(encrypted),
+    })
+
+    if (response.ok) {
+      console.log('👍 Credential sent!')
+    }
+  } else if (
+    foundCtype &&
+    foundCtype === energyWebCredential?.request.claim.cTypeHash &&
+    energyWebCredential
+  ) {
+    console.log('✅ Found a credential for provided ctype')
+
+    const messageBody: ISubmitClaimsForCTypes = {
+      content: [energyWebCredential],
       type: Kilt.Message.BodyType.SUBMIT_CLAIMS_FOR_CTYPES,
     }
     const message = new Message(
@@ -156,6 +205,42 @@ const handleSubmitTermsMessage = async (
       }
     } else {
       console.log('❌ Delegation root node does not match!')
+    }
+  } else if (claim.cTypeHash === energyWebCtype.hash) {
+    console.log('✅ CTYPE matches: EnergyWeb Role Credential')
+
+    const newClaim = Kilt.Claim.fromCTypeAndClaimContents(
+      energyWebCtype,
+      {
+        ...claim.contents,
+      },
+      identity.address
+    )
+
+    const requestForAttestation =
+      Kilt.RequestForAttestation.fromClaimAndIdentity(newClaim, identity)
+
+    const messageBody: IRequestAttestationForClaim = {
+      content: { requestForAttestation },
+      type: Kilt.Message.BodyType.REQUEST_ATTESTATION_FOR_CLAIM,
+    }
+    const message = new Message(
+      messageBody,
+      identity.getPublicIdentity(),
+      attester
+    )
+    const encrypted = message.encrypt(identity, attester)
+
+    const response = await fetch(MESSAGING_URL, {
+      ...BASE_POST_PARAMS,
+      body: JSON.stringify(encrypted),
+    })
+
+    if (response.ok) {
+      await store('energyWebRequest', requestForAttestation)
+      console.log(
+        '👍 Terms accepted and Request For Attestation signed and sent!'
+      )
     }
   } else {
     console.log(`❌ Ctype doesn't match!`)
