@@ -16,6 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "@kiltprotocol/sdk-js": "0.22.0",
+    "@kiltprotocol/vc-export": "^0.22.0",
     "@types/express": "^4.17.11",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
