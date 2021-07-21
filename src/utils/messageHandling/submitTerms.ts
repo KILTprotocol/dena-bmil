@@ -1,4 +1,5 @@
 import fetch from 'node-fetch'
+import fs from 'fs'
 import Kilt, {
   Identity,
   IPublicIdentity,
@@ -8,7 +9,11 @@ import Kilt, {
 } from '@kiltprotocol/sdk-js'
 import { storeRequest, store } from '../helper'
 import { MESSAGING_URL, BASE_POST_PARAMS } from '../fetch'
-import { ctype, delegationRootId, energyWebCtype } from '../const'
+import {
+  energyWebCtype,
+  OLIBoxCredentialCtype,
+  OLIBoxCredentialDelegationRootId,
+} from '../const'
 
 export const handleSubmitTermsMessage = async (
   identity: Identity,
@@ -16,7 +21,8 @@ export const handleSubmitTermsMessage = async (
   claim: PartialClaim,
   delegationId?: string
 ) => {
-  if (claim.cTypeHash === ctype.hash && delegationId) {
+  // BMIL Credential
+  if (claim.cTypeHash === OLIBoxCredentialCtype.hash && delegationId) {
     const delegationNode = await Kilt.DelegationNode.query(delegationId)
     const delegationRootNode = await delegationNode?.getRoot()
 
@@ -25,13 +31,43 @@ export const handleSubmitTermsMessage = async (
     if (
       delegationNode &&
       delegationRootNode &&
-      delegationRootNode.id === delegationRootId
+      delegationRootNode.id === OLIBoxCredentialDelegationRootId
     ) {
       console.log('✅ Delegation Root matches')
+
+      const claimContents = claim.contents || {}
+
+      let masterData
+      if (process.env.MASTER_DATA) {
+        try {
+          await fs.promises.access(process.env.MASTER_DATA, fs.constants.R_OK)
+          const data = await fs.promises.readFile(process.env.MASTER_DATA)
+          masterData = JSON.parse(data.toString())
+        } catch (e) {
+          console.error("Couldn't access or read master data file")
+        }
+      }
+
+      if (masterData) {
+        const {
+          c_manufacturer,
+          c_model,
+          c_serialnumber,
+          c_deviceaddress,
+          c_sunspec_did,
+        } = masterData
+
+        claimContents.manufacturer = c_manufacturer
+        claimContents.model = c_model
+        claimContents.serialnumber = c_serialnumber
+        claimContents.deviceaddress = c_deviceaddress.toString()
+        claimContents.sunspec_did = c_sunspec_did.toString()
+      }
+
       const newClaim = Kilt.Claim.fromCTypeAndClaimContents(
-        ctype,
+        OLIBoxCredentialCtype,
         {
-          ...claim.contents,
+          ...claimContents,
         },
         identity.address
       )
@@ -66,6 +102,8 @@ export const handleSubmitTermsMessage = async (
     } else {
       console.log('❌ Delegation root node does not match!')
     }
+
+    // EnergyWebRole Credential
   } else if (claim.cTypeHash === energyWebCtype.hash) {
     console.log('✅ CTYPE matches: EnergyWeb Role Credential')
 

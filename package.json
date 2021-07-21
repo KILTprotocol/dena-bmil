@@ -17,6 +17,7 @@
   "dependencies": {
     "@kiltprotocol/sdk-js": "0.22.0",
     "@types/express": "^4.17.11",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "node-fetch": "^2.6.1",
     "python-shell": "^3.0.0",

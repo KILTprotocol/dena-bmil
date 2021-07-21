@@ -1042,6 +1042,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dotenv@npm:^10.0.0":
+  version: 10.0.0
+  resolution: "dotenv@npm:10.0.0"
+  checksum: 9c45712e213de63bdb646b8e5344749b7566e25a67bbd3f03711d54e40eff10066c1f23eff0081d0949fda7c8efcc6e9e8bf18d0f023a8274f55f5d5f97bb6db
+  languageName: node
+  linkType: hard
+
 "dynamic-dedupe@npm:^0.3.0":
   version: 0.3.0
   resolution: "dynamic-dedupe@npm:0.3.0"
@@ -2078,6 +2085,7 @@ fsevents@~2.3.1:
   dependencies:
     "@kiltprotocol/sdk-js": 0.22.0
     "@types/express": ^4.17.11
+    dotenv: ^10.0.0
     express: ^4.17.1
     node-fetch: ^2.6.1
     python-shell: ^3.0.0
