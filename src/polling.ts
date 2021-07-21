@@ -1,5 +1,5 @@
 import fetch from 'node-fetch'
-import Kilt, { Identity, IEncryptedMessage } from '@kiltprotocol/sdk-js'
+import Kilt, { Identity, IEncryptedMessage, PublicIdentity } from '@kiltprotocol/sdk-js'
 import { getStoredIdentity } from './utils/helper'
 import { MESSAGING_URL, BASE_DELETE_PARAMS } from './utils/fetch'
 import {
@@ -22,6 +22,7 @@ const handleMessages = async (messages: IEncryptedMessage[]) => {
 
   for (const encrypted of messages) {
     const decryted = Kilt.Message.decrypt(encrypted, identity)
+    const sender = new PublicIdentity(decryted.senderAddress, decryted.senderBoxPublicKey)
     try {
       switch (decryted.body.type) {
         case Kilt.Message.BodyType.SUBMIT_ATTESTATION_FOR_CLAIM:
@@ -38,15 +39,12 @@ const handleMessages = async (messages: IEncryptedMessage[]) => {
           console.log(
             `⏱  Processing Request For Claims from ${decryted.senderAddress}`
           )
-          await handleRequestClaimMessage(ctypes, identity, {
-            address: decryted.senderAddress,
-            boxPublicKeyAsHex: decryted.senderBoxPublicKey,
-          })
+          await handleRequestClaimMessage(ctypes, identity, sender)
           break
         case Kilt.Message.BodyType.SUBMIT_TERMS:
           const { claim, delegationId } = decryted.body.content
           console.log(`⏱  Processing Terms from ${decryted.senderAddress}`)
-          await handleSubmitTermsMessage(identity, claim, delegationId)
+          await handleSubmitTermsMessage(identity, sender, claim, delegationId)
       }
     } catch (e) {
       throw e

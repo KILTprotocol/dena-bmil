@@ -1,16 +1,18 @@
 import fetch from 'node-fetch'
 import Kilt, {
   Identity,
+  IPublicIdentity,
   IRequestAttestationForClaim,
   Message,
   PartialClaim,
 } from '@kiltprotocol/sdk-js'
 import { storeRequest, store } from '../helper'
 import { MESSAGING_URL, BASE_POST_PARAMS } from '../fetch'
-import { attester, ctype, delegationRootId, energyWebCtype } from '../const'
+import { ctype, delegationRootId, energyWebCtype } from '../const'
 
 export const handleSubmitTermsMessage = async (
   identity: Identity,
+  sender: IPublicIdentity,
   claim: PartialClaim,
   delegationId?: string
 ) => {
@@ -46,9 +48,9 @@ export const handleSubmitTermsMessage = async (
       const message = new Message(
         messageBody,
         identity.getPublicIdentity(),
-        attester
+        sender
       )
-      const encrypted = message.encrypt(identity, attester)
+      const encrypted = message.encrypt(identity, sender)
 
       const response = await fetch(MESSAGING_URL, {
         ...BASE_POST_PARAMS,
@@ -85,9 +87,9 @@ export const handleSubmitTermsMessage = async (
     const message = new Message(
       messageBody,
       identity.getPublicIdentity(),
-      attester
+      sender
     )
-    const encrypted = message.encrypt(identity, attester)
+    const encrypted = message.encrypt(identity, sender)
 
     const response = await fetch(MESSAGING_URL, {
       ...BASE_POST_PARAMS,
