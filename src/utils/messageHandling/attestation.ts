@@ -18,28 +18,30 @@ export const handleAttestationMessage = async (attestation: IAttestation) => {
     await storeCredential(credential)
     console.log('👍 Credential stored!')
 
-    console.log('📤 exporting to VC and sending to the EWF app')
-    const VC = VCUtils.fromAttestedClaim(credential, OLIBoxCredentialCtype)
-    // TODO: make a presentation?
+    if (process.env.EWF_URL) {
+      console.log('📤 exporting to VC and sending to the EWF app')
+      const VC = VCUtils.fromAttestedClaim(credential, OLIBoxCredentialCtype)
+      // TODO: make a presentation?
 
-    VC.type = [...VC.type, 'BMILInstallationCredential']
+      VC.type = [...VC.type, 'BMILInstallationCredential']
 
-    const wrapForEwf = {
-      subject_did: VC.credentialSubject['@id'],
-      credential: VC,
-    }
+      const wrapForEwf = {
+        subject_did: VC.credentialSubject['@id'],
+        credential: VC,
+      }
 
-    console.log(JSON.stringify(wrapForEwf, undefined, 4))
+      console.log(JSON.stringify(wrapForEwf, undefined, 4))
 
-    const response = await fetch(
-      'https://9d0761767845.ngrok.io/bmil-backend/bmil/credentials',
-      { ...BASE_POST_PARAMS, body: JSON.stringify(wrapForEwf) }
-    )
+      const response = await fetch(process.env.EWF_URL, {
+        ...BASE_POST_PARAMS,
+        body: JSON.stringify(wrapForEwf),
+      })
 
-    if (response.ok) {
-      console.log('👍 Credential sent!')
-    } else {
-      console.error(response.status, response.statusText)
+      if (response.ok) {
+        console.log('👍 Credential sent!')
+      } else {
+        console.error(response.status, response.statusText)
+      }
     }
   } else if (
     energyWebRequest &&
