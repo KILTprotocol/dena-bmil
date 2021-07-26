@@ -1,17 +1,9 @@
 import express from 'express'
 import fetch from 'node-fetch'
-import Kilt, {
-  IRequestAttestationForClaim,
-  Message,
-} from '@kiltprotocol/sdk-js'
-import {
-  getStoredCredential,
-  getStoredIdentity,
-  storeRequest,
-} from './utils/helper'
+import Kilt from '@kiltprotocol/sdk-js'
+import { getStoredCredential, getStoredIdentity } from './utils/helper'
 import { MESSAGING_URL, BASE_POST_PARAMS, CONTACTS_URL } from './utils/fetch'
 import { generateRandom, encryptAndStore } from './utils/crypto'
-import { BMILAnlagedatenCtype, BMILAnlagedatenAttester } from './utils/const'
 
 Kilt.config({
   address: 'wss://full-nodes.kilt.io',
@@ -92,50 +84,6 @@ router.post('/identity/register', async (req, res, next) => {
   } catch (e) {
     next(e)
   }
-})
-
-router.post('/claim', async (req, res) => {
-  const identity = await getStoredIdentity()
-  if (!identity) {
-    throw Error('No identity stored')
-  }
-  const claim = Kilt.Claim.fromCTypeAndClaimContents(
-    BMILAnlagedatenCtype,
-    {
-      name: 'OLI',
-      age: 20,
-    },
-    identity.address
-  )
-
-  const requestForAttestation = Kilt.RequestForAttestation.fromClaimAndIdentity(
-    claim,
-    identity
-  )
-
-  const messageBody: IRequestAttestationForClaim = {
-    content: { requestForAttestation },
-    type: Kilt.Message.BodyType.REQUEST_ATTESTATION_FOR_CLAIM,
-  }
-  const message = new Message(
-    messageBody,
-    identity.getPublicIdentity(),
-    BMILAnlagedatenAttester
-  )
-  const encrypted = message.encrypt(identity, BMILAnlagedatenAttester)
-
-  const response = await fetch(MESSAGING_URL, {
-    ...BASE_POST_PARAMS,
-    body: JSON.stringify(encrypted),
-  })
-
-  if (response.ok) {
-    await storeRequest(requestForAttestation)
-  }
-
-  console.log('👍 Example claim generated and Request For Attestation sent!')
-
-  res.json('Finished')
 })
 
 router.get('/credential', async (req, res) => {

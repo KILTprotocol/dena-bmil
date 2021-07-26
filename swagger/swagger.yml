@@ -51,13 +51,6 @@ paths:
               examples:
                 DDO:
                   $ref: '#/components/examples/DDO'
-  /claim:
-    post:
-      tags: [Claiming]
-      description: Generates a Claim and sends a RequestForAttestation to an Attester.
-      responses:
-        '200':
-          description: Claim successfully generated and sent to the attester.
   /credential:
     get:
       tags: [Credential]
