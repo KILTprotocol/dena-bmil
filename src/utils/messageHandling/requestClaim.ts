@@ -15,7 +15,7 @@ import {
   BASE_POST_PARAMS,
 } from '../fetch'
 import {
-  excludedClaimProperties,
+  BMILAnlagedatenExcludedClaimProperties,
 } from '../const'
 
 export const handleRequestClaimMessage = async (
@@ -51,7 +51,7 @@ export const handleRequestClaimMessage = async (
       )
     )
 
-    attClaim.request.removeClaimProperties(excludedClaimProperties)
+    attClaim.request.removeClaimProperties(BMILAnlagedatenExcludedClaimProperties)
 
     const messageBody: ISubmitClaimsForCTypes = {
       content: [attClaim],

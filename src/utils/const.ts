@@ -1,19 +1,19 @@
 import Kilt, { IPublicIdentity } from '@kiltprotocol/sdk-js'
 import { MESSAGING_URL } from './fetch'
 
-export const attester: IPublicIdentity = {
+export const BMILAnlagedatenAttester: IPublicIdentity = {
   address: '4oTwFGDLgK4nUpnVTYkW8rAYxCG3Noedhcz5YNzWsoxwU3J1',
   boxPublicKeyAsHex:
     '0xd507eda0658bd2f1a170143525879c343b0635307ed2d17daf4c07e8b161e637',
   serviceAddress: MESSAGING_URL,
 }
 
-export const delegationRootId =
+export const BMILAnlagedatenDelegationRootId =
   '0x24c8098ed324b03e602402c8e97bc8524f44ff23c4ca9d2343ff278bed809400'
 
-export const excludedClaimProperties = ['Laengengrad', 'Breitengrad']
+export const BMILAnlagedatenExcludedClaimProperties = ['Laengengrad', 'Breitengrad']
 
-export const ctype = Kilt.CType.fromCType({
+export const BMILAnlagedatenCtype = Kilt.CType.fromCType({
   schema: {
     $schema: 'http://kilt-protocol.org/draft-01/ctype#',
     title: 'BMIL_Anlagedaten',

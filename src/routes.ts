@@ -11,7 +11,7 @@ import {
 } from './utils/helper'
 import { MESSAGING_URL, BASE_POST_PARAMS, CONTACTS_URL } from './utils/fetch'
 import { generateRandom, encryptAndStore } from './utils/crypto'
-import { ctype, attester } from './utils/const'
+import { BMILAnlagedatenCtype, BMILAnlagedatenAttester } from './utils/const'
 
 Kilt.config({
   address: 'wss://full-nodes.kilt.io',
@@ -100,7 +100,7 @@ router.post('/claim', async (req, res) => {
     throw Error('No identity stored')
   }
   const claim = Kilt.Claim.fromCTypeAndClaimContents(
-    ctype,
+    BMILAnlagedatenCtype,
     {
       name: 'OLI',
       age: 20,
@@ -120,9 +120,9 @@ router.post('/claim', async (req, res) => {
   const message = new Message(
     messageBody,
     identity.getPublicIdentity(),
-    attester
+    BMILAnlagedatenAttester
   )
-  const encrypted = message.encrypt(identity, attester)
+  const encrypted = message.encrypt(identity, BMILAnlagedatenAttester)
 
   const response = await fetch(MESSAGING_URL, {
     ...BASE_POST_PARAMS,
