@@ -39,8 +39,6 @@ export const handleAttestationMessage = async (attestation: IAttestation) => {
         credential: VC,
       }
 
-      console.log(JSON.stringify(wrapForEwf, undefined, 4))
-
       const response = await fetch(process.env.EWF_URL, {
         ...BASE_POST_PARAMS,
         body: JSON.stringify(wrapForEwf),
@@ -49,7 +47,7 @@ export const handleAttestationMessage = async (attestation: IAttestation) => {
       if (response.ok) {
         console.log('👍 Credential sent!')
       } else {
-        console.error(response.status, response.statusText)
+        console.error(response.status, response.statusText, await response.text())
       }
     }
   } else if (
