@@ -4,6 +4,7 @@ import Kilt, {
   Identity,
   IPublicIdentity,
   IRequestAttestationForClaim,
+  IRequestForAttestation,
   Message,
   PartialClaim,
 } from '@kiltprotocol/sdk-js'
@@ -14,6 +15,28 @@ import {
   OLIBoxCredentialCtype,
   OLIBoxCredentialDelegationRootId,
 } from '../const'
+
+export const sendReq4AttMessage = (
+  requestForAttestation: IRequestForAttestation,
+  identity: Identity,
+  receiver: IPublicIdentity
+) => {
+  const messageBody: IRequestAttestationForClaim = {
+    content: { requestForAttestation },
+    type: Kilt.Message.BodyType.REQUEST_ATTESTATION_FOR_CLAIM,
+  }
+  const message = new Message(
+    messageBody,
+    identity.getPublicIdentity(),
+    receiver
+  )
+  const encrypted = message.encrypt(identity, receiver)
+
+  return fetch(MESSAGING_URL, {
+    ...BASE_POST_PARAMS,
+    body: JSON.stringify(encrypted),
+  })
+}
 
 export const handleSubmitTermsMessage = async (
   identity: Identity,
@@ -77,21 +100,11 @@ export const handleSubmitTermsMessage = async (
           delegationId,
         })
 
-      const messageBody: IRequestAttestationForClaim = {
-        content: { requestForAttestation },
-        type: Kilt.Message.BodyType.REQUEST_ATTESTATION_FOR_CLAIM,
-      }
-      const message = new Message(
-        messageBody,
-        identity.getPublicIdentity(),
+      const response = await sendReq4AttMessage(
+        requestForAttestation,
+        identity,
         sender
       )
-      const encrypted = message.encrypt(identity, sender)
-
-      const response = await fetch(MESSAGING_URL, {
-        ...BASE_POST_PARAMS,
-        body: JSON.stringify(encrypted),
-      })
 
       if (response.ok) {
         await storeRequest(requestForAttestation)
@@ -118,21 +131,11 @@ export const handleSubmitTermsMessage = async (
     const requestForAttestation =
       Kilt.RequestForAttestation.fromClaimAndIdentity(newClaim, identity)
 
-    const messageBody: IRequestAttestationForClaim = {
-      content: { requestForAttestation },
-      type: Kilt.Message.BodyType.REQUEST_ATTESTATION_FOR_CLAIM,
-    }
-    const message = new Message(
-      messageBody,
-      identity.getPublicIdentity(),
+    const response = await sendReq4AttMessage(
+      requestForAttestation,
+      identity,
       sender
     )
-    const encrypted = message.encrypt(identity, sender)
-
-    const response = await fetch(MESSAGING_URL, {
-      ...BASE_POST_PARAMS,
-      body: JSON.stringify(encrypted),
-    })
 
     if (response.ok) {
       await store('energyWebRequest', requestForAttestation)
