@@ -58,3 +58,13 @@ export const getStoredEnergyWebCredential = async () => {
     return Kilt.AttestedClaim.fromAttestedClaim(credential)
   }
 }
+
+export const removeRequest = async (energyWebRequest: any) => {
+  const requests = await retrieve('energyWebRequests')
+  if (requests && Array.isArray(requests)) {
+    const newRequests = requests.filter(
+      (request) => request.rootHash !== energyWebRequest.rootHash
+    )
+    return store('energyWebRequests', newRequests)
+  }
+}

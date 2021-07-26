@@ -8,7 +8,7 @@ import Kilt, {
   Message,
   PartialClaim,
 } from '@kiltprotocol/sdk-js'
-import { storeRequest, store } from '../helper'
+import { storeRequest, store, retrieve } from '../helper'
 import { MESSAGING_URL, BASE_POST_PARAMS } from '../fetch'
 import {
   EnergyWebCtype,
@@ -138,7 +138,14 @@ export const handleSubmitTermsMessage = async (
     )
 
     if (response.ok) {
-      await store('energyWebRequest', requestForAttestation)
+      let requests: any[] = []
+      const oldRequests = await retrieve('energyWebRequests')
+      if (oldRequests && oldRequests.length) {
+        requests = [...oldRequests]
+      }
+      requests.push(requestForAttestation)
+      await store('energyWebRequests', requests)
+
       console.log(
         '👍 Terms accepted and Request For Attestation signed and sent!'
       )

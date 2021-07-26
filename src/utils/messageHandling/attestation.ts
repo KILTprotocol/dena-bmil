@@ -2,13 +2,19 @@ import Kilt, { IAttestation } from '@kiltprotocol/sdk-js'
 import VCUtils from '@kiltprotocol/vc-export'
 import fetch from 'node-fetch'
 import { BASE_POST_PARAMS } from '../fetch'
-import { storeCredential, getStoredRequest, store, retrieve } from '../helper'
+import {
+  storeCredential,
+  getStoredRequest,
+  store,
+  retrieve,
+  removeRequest,
+} from '../helper'
 import { OLIBoxCredentialCtype } from '../const'
 
 export const handleAttestationMessage = async (attestation: IAttestation) => {
   console.log(attestation)
   const request = await getStoredRequest()
-  const energyWebRequest = await retrieve('energyWebRequest')
+  const energyWebRequests = await retrieve('energyWebRequests')
   if (request && request.rootHash === attestation.claimHash) {
     console.log('✅ Attestation matches previous Request')
     const credential = Kilt.AttestedClaim.fromRequestAndAttestation(
@@ -44,17 +50,35 @@ export const handleAttestationMessage = async (attestation: IAttestation) => {
       }
     }
   } else if (
-    energyWebRequest &&
-    energyWebRequest.rootHash === attestation.claimHash
+    energyWebRequests &&
+    Array.isArray(energyWebRequests) &&
+    energyWebRequests.length
   ) {
-    console.log(
-      '✅ Attestation matches previous Request: EnergyWeb Role Credential'
+    const energyWebRequest = energyWebRequests.find(
+      (request) => request.rootHash === attestation.claimHash
     )
-    const credential = Kilt.AttestedClaim.fromRequestAndAttestation(
-      energyWebRequest,
-      attestation
-    )
-    await store('energyWebCredential', credential, 'energyWebRequest')
-    console.log('👍 Credential stored!')
+
+    if (energyWebRequest) {
+      console.log(
+        '✅ Attestation matches previous Request: EnergyWeb Role Credential'
+      )
+      const credential = Kilt.AttestedClaim.fromRequestAndAttestation(
+        energyWebRequest,
+        attestation
+      )
+
+      let credentials: any[] = []
+      const oldCredentials = await retrieve('energyWebCredentials')
+      if (oldCredentials && oldCredentials.length) {
+        credentials = [...oldCredentials]
+      }
+      credentials.push(credential)
+
+      await store('energyWebCredentials', credentials)
+      await removeRequest(energyWebRequest)
+      console.log('👍 Credential stored!')
+    }
+  } else {
+    console.log("❌ Couldn't find corresponding request")
   }
 }
