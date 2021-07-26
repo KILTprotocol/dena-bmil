@@ -10,7 +10,7 @@ import Kilt, {
 import { storeRequest, store } from '../helper'
 import { MESSAGING_URL, BASE_POST_PARAMS } from '../fetch'
 import {
-  energyWebCtype,
+  EnergyWebCtype,
   OLIBoxCredentialCtype,
   OLIBoxCredentialDelegationRootId,
 } from '../const'
@@ -104,11 +104,11 @@ export const handleSubmitTermsMessage = async (
     }
 
     // EnergyWebRole Credential
-  } else if (claim.cTypeHash === energyWebCtype.hash) {
+  } else if (claim.cTypeHash === EnergyWebCtype.hash) {
     console.log('✅ CTYPE matches: EnergyWeb Role Credential')
 
     const newClaim = Kilt.Claim.fromCTypeAndClaimContents(
-      energyWebCtype,
+      EnergyWebCtype,
       {
         ...claim.contents,
       },

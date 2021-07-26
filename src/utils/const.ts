@@ -70,7 +70,7 @@ export const ctype = Kilt.CType.fromCType({
   hash: '0x001b0560ebee835f73a8c8b91391af8f3a8da985d5a7816e2c4aa0d787440374',
 })
 
-export const energyWebCtype = Kilt.CType.fromCType({
+export const EnergyWebCtype = Kilt.CType.fromCType({
   schema: {
     $schema: 'http://kilt-protocol.org/draft-01/ctype#',
     title: 'EnergyWeb Role Credential',
