@@ -9,7 +9,7 @@ import {
   retrieve,
   removeRequest,
 } from '../helper'
-import { OLIBoxCredentialCtype } from '../const'
+import { BMILInstallationCredentialCtype } from '../const'
 
 export const handleAttestationMessage = async (attestation: IAttestation) => {
   console.log(attestation)
@@ -26,7 +26,10 @@ export const handleAttestationMessage = async (attestation: IAttestation) => {
 
     if (process.env.EWF_URL) {
       console.log('📤 exporting to VC and sending to the EWF app')
-      const VC = VCUtils.fromAttestedClaim(credential, OLIBoxCredentialCtype)
+      const VC = VCUtils.fromAttestedClaim(
+        credential,
+        BMILInstallationCredentialCtype
+      )
       // TODO: make a presentation?
 
       VC.type = [...VC.type, 'BMILInstallationCredential']

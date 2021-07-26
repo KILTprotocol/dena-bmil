@@ -12,8 +12,8 @@ import { storeRequest, store, retrieve } from '../helper'
 import { MESSAGING_URL, BASE_POST_PARAMS } from '../fetch'
 import {
   EnergyWebCtype,
-  OLIBoxCredentialCtype,
-  OLIBoxCredentialDelegationRootId,
+  BMILInstallationCredentialCtype,
+  BMILInstallationCredentialDelegationRootId,
 } from '../const'
 
 export const sendReq4AttMessage = (
@@ -45,7 +45,10 @@ export const handleSubmitTermsMessage = async (
   delegationId?: string
 ) => {
   // BMIL Credential
-  if (claim.cTypeHash === OLIBoxCredentialCtype.hash && delegationId) {
+  if (
+    claim.cTypeHash === BMILInstallationCredentialCtype.hash &&
+    delegationId
+  ) {
     const delegationNode = await Kilt.DelegationNode.query(delegationId)
     const delegationRootNode = await delegationNode?.getRoot()
 
@@ -54,7 +57,7 @@ export const handleSubmitTermsMessage = async (
     if (
       delegationNode &&
       delegationRootNode &&
-      delegationRootNode.id === OLIBoxCredentialDelegationRootId
+      delegationRootNode.id === BMILInstallationCredentialDelegationRootId
     ) {
       console.log('✅ Delegation Root matches')
 
@@ -80,15 +83,15 @@ export const handleSubmitTermsMessage = async (
           c_sunspec_did,
         } = masterData
 
-        claimContents.manufacturer = c_manufacturer
-        claimContents.model = c_model
-        claimContents.serialnumber = c_serialnumber
-        claimContents.deviceaddress = c_deviceaddress.toString()
-        claimContents.sunspec_did = c_sunspec_did.toString()
+        claimContents.device_manufacturer = c_manufacturer
+        claimContents.device_model = c_model
+        claimContents.device_serialnumber = c_serialnumber
+        claimContents.device_address = c_deviceaddress.toString()
+        claimContents.device_sunspec_did = c_sunspec_did.toString()
       }
 
       const newClaim = Kilt.Claim.fromCTypeAndClaimContents(
-        OLIBoxCredentialCtype,
+        BMILInstallationCredentialCtype,
         {
           ...claimContents,
         },

@@ -15,7 +15,9 @@ import {
   BASE_POST_PARAMS,
 } from '../fetch'
 import {
-  // BMILAnlagedatenExcludedClaimProperties,
+  BMILInstallationCredentialExcludedClaimProperties,
+  BMILInstallationCredentialCtype,
+  EnergyWebCtype
 } from '../const'
 
 export const handleRequestClaimMessage = async (
@@ -27,8 +29,8 @@ export const handleRequestClaimMessage = async (
   const energyWebCredential = await getStoredEnergyWebCredential()
   const foundCtype = ctypes.find((ctypeHash) => {
     if (
-      credential?.request.claim.cTypeHash === ctypeHash ||
-      energyWebCredential?.request.claim.cTypeHash === ctypeHash
+      BMILInstallationCredentialCtype.hash === ctypeHash ||
+      EnergyWebCtype.hash === ctypeHash
     ) {
       return credential
     }
@@ -51,7 +53,7 @@ export const handleRequestClaimMessage = async (
       )
     )
 
-    // attClaim.request.removeClaimProperties(BMILAnlagedatenExcludedClaimProperties)
+    attClaim.request.removeClaimProperties(BMILInstallationCredentialExcludedClaimProperties)
 
     const messageBody: ISubmitClaimsForCTypes = {
       content: [attClaim],
