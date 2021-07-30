@@ -16,7 +16,7 @@ This is the repo containing code for the DENA BMIL project.
 
 ## How to use
 - Local development
-  - Use node v10 or v12
+  - Use node v14
   - Install dependencies with `yarn install`
   - Use in development mode with `yarn start`
     - This will use a mock implementation of the zymkey cryto chip
@@ -30,17 +30,46 @@ This is the repo containing code for the DENA BMIL project.
   - `yarn serve` to run the application
 
 ## Trying it out
-To try out the API locally, you can run `yarn swagger` and go to http://localhost:3000/doc/.
-Here you see the available endpoints and can call them directly via the swagger interface.
 
-To use the attester, visit https://demo.kilt.io/ and use an identity with following seed phrase:
-`mesh steel soon marble garden start ginger beyond stem soap inquiry jacket` (SR25519).
+### Attester Setup
+1. Go to https://demo.kilt.io/, make a new identity "Bundesnetzagentur" and request some tokens
+2. Make another identity "Installateur" and request tokens
+3. With the "Bundesnetzagentur" identity, go to "Delegations" and create a new Delegation on the "BMILInstallationCredential" ctype
+4. Invite the "Installateur" identity, switch to that identity and accept the invitation in the "Messages" tab
+5. Switch to the "Bundesnetzagentur" identity (still in messages tab) and put the delegation on chain
+6. Switch back to the "Installateur" identity (still in messages tab) and save the delegation
+7. Go to the "Delegations" tab, open the correct delegation and note down the full root delegation hash
 
-After using the claiming endpoint, you will have a message under `Messages` in the demo client using the aforementioned attester. Here you can make an attestation and send back a success message.
+### Application Setup
+1. Open `src/utils/const.ts` and change the `BMILInstallationCredentialDelegationRootId` to the one noted down above
+1. Run the application
+2. Generate an identity, by sending a POST request to http://localhost:3000/identity
+3. Note down the address of the identity
+4. Go to the demo-client and transfer some tokens to the identity
+5. Send a POST request to http://localhost:3000/identity/register. This will register a DID for the identity
+6. Note down the DID
 
-For verification, you have to register the DID via the correct endpoint, copy the did and add it as a new contact on the demo client under the `Contacts` tab. Than you can choose the correct ctype (In the example the `DriversLicense` ctype with the hash `0x5366521b1cf4497cfe5f17663a7387a87bb8f2c4295d7c40f3140e7ee6afc41b`) and in the context menu choose "Request claims", select the contact added via did and wait for the application to respond.
+### Credential Setup
+1. Go to the demo-client
+2. Add the DID above as a contact
+3. With the "Installateur", go to "Contacts" and as the "action" next to the DID select "Submit Terms"
+4. Select the "BMILInstallationCredential"
+5. Click on "With prefilled claim" and fill in all the information
+6. As delegation, select the delegation saved in the "Attester Setup"
+7. Click "Send Terms"
+8. The application will receive a message
+9. If all the details can be validated, it will automatically send a "request-attestation-for-claim" message back to the attester
+10. If the `MASTER_DATA` env variable was provided, the application will try to extract device information out of the file and add it to the "Request For Attestation", before sending it back to the attesster
+11. In the demo-client as the "Installateur", go to "Messages", click on the message from the application, confirm the information and click on "Attest Claim". This will put the attestation on the chain and send a message back to the application
+12. The application will receive the message with the attestation and saves it in its store
+13. If a `EWF_URL` env variable was provided, it will convert the credential to a VC and send it to the EWF app
+
+### Verification
+For verification, register and copy the did of the application and add it as a new contact on the demo client under the `Contacts` tab. Than you can choose the correct ctype (In the example the `BMILInstallationCredential` ctype with the hash `0xf3f981d9ed4559d9303455826b06bc7048a76107d96185cc31e491cadeafec9e`) and in the context menu choose "Request claims", select the contact added via did and wait for the application to respond.
 You will get a message including the credential in the demo client.
-
+## API Documentation
+To see the API documentation, run `yarn swagger` and go to http://localhost:3000/doc/.
+Here you see the available endpoints and can call them directly via the swagger interface.
 ## Notes
 ### Setup
 - Problems with expired GPG Key from zymkey
