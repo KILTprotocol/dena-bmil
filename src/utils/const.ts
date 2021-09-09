@@ -56,6 +56,9 @@ export const BMILInstallationCredentialCtype = Kilt.CType.fromCType({
       grid_connection: {
         type: 'string',
       },
+      name: {
+        type: 'string',
+      },
       device_manufacturer: {
         type: 'string',
       },
@@ -73,14 +76,14 @@ export const BMILInstallationCredentialCtype = Kilt.CType.fromCType({
       },
     },
     type: 'object',
-    $id: 'kilt:ctype:0xf3f981d9ed4559d9303455826b06bc7048a76107d96185cc31e491cadeafec9e',
+    $id: 'kilt:ctype:0x7b431dfb20a2344939712d28c384e8198ed08f6f505b5153f6ea64704bae61c9',
   },
   owner: '4pZRhNcdBSVjCDQbarnpuNPusvLkXf6364BUDG82rXhzFMMr',
-  hash: '0xf3f981d9ed4559d9303455826b06bc7048a76107d96185cc31e491cadeafec9e',
+  hash: '0x7b431dfb20a2344939712d28c384e8198ed08f6f505b5153f6ea64704bae61c9',
 })
 
 export const BMILInstallationCredentialDelegationRootId =
-  '0xdf671bfa6fdc2ea9ec8439dc194e23689cfdc9d27e609333e5dd06511a57db4e'
+  '0x99957ba9475d27d42d2dfb112947424189a7bf6cdd2c1f457d6b366c89375f45'
 
 export const BMILInstallationCredentialExcludedClaimProperties = [
   'latitude',
