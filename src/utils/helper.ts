@@ -52,13 +52,6 @@ export const getStoredCredential = async () => {
   }
 }
 
-export const getStoredEnergyWebCredential = async () => {
-  const credential = await retrieve('energyWebCredential')
-  if (credential) {
-    return Kilt.AttestedClaim.fromAttestedClaim(credential)
-  }
-}
-
 export const removeRequest = async (energyWebRequest: any) => {
   const requests = await retrieve('energyWebRequests')
   if (requests && Array.isArray(requests)) {
@@ -66,5 +59,14 @@ export const removeRequest = async (energyWebRequest: any) => {
       (request) => request.rootHash !== energyWebRequest.rootHash
     )
     return store('energyWebRequests', newRequests)
+  }
+}
+
+export const getStoredEnergyWebCredentials = async () => {
+  const credentials = await retrieve('energyWebCredentials')
+  if (credentials && Array.isArray(credentials)) {
+    return credentials
+      .filter(Boolean)
+      .map((credential) => Kilt.AttestedClaim.fromAttestedClaim(credential))
   }
 }
