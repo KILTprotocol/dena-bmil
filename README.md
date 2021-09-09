@@ -60,6 +60,7 @@ This is the repo containing code for the DENA BMIL project.
 8. The application will receive a message
 9. If all the details can be validated, it will automatically send a "request-attestation-for-claim" message back to the attester
 10. If the `MASTER_DATA` env variable was provided, the application will try to extract device information out of the file and add it to the "Request For Attestation", before sending it back to the attesster
+11. If the `BOX_NAME` env variable was provided, the application will add the info to the `name` field
 11. In the demo-client as the "Installateur", go to "Messages", click on the message from the application, confirm the information and click on "Attest Claim". This will put the attestation on the chain and send a message back to the application
 12. The application will receive the message with the attestation and saves it in its store
 13. If a `EWF_URL` env variable was provided, it will convert the credential to a VC and send it to the EWF app
