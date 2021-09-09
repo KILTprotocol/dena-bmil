@@ -88,7 +88,10 @@ export const handleSubmitTermsMessage = async (
         claimContents.device_serialnumber = c_serialnumber
         claimContents.device_address = c_deviceaddress.toString()
         claimContents.device_sunspec_did = c_sunspec_did.toString()
-        claimContents.name = 'oli' //TODO: put into env variable
+      }
+
+      if (process.env.BOX_NAME) {
+        claimContents.name = process.env.BOX_NAME
       }
 
       const newClaim = Kilt.Claim.fromCTypeAndClaimContents(
