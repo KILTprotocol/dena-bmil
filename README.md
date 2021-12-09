@@ -31,6 +31,21 @@ This is the repo containing code for the DENA BMIL project.
 
 ## Trying it out
 
+### General Setup
+1. Make sure you have docker and docker-compose installed
+2. Start services with `docker compose up -d`. This includes a dev blockchain node, the demo client and services needed for the demo client and message exchange
+3. Open http://localhost:3000 to open the demo client
+4. Add the Faucet account by going ot
+  a. Click "Manage Identities"
+  b. Click "Add Identity"
+  c. Enter a name for the account, e.g. "Faucet"
+  d. Check "Import Seed Phrase"
+  e. Enter `receive clutch item involve chaos clutch furnace arrest claw isolate okay together` into the "Seed Phrase" field
+  f. Click "Advanced Options"
+  g. Select "ED25519" for the Signing Key Pair
+  h. Click "Add" to add the Facuet Account to your Accounts
+5. To generate the needed ctype, execute `npx ts-node generateCtype.ts`
+
 ### Attester Setup
 1. Go to https://demo.kilt.io/, make a new identity "Bundesnetzagentur" and request some tokens
 2. Make another identity "Installateur" and request tokens
