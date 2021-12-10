@@ -1,3 +1,6 @@
+import { config } from 'dotenv'
+config()
+
 export const BASE_POST_PARAMS = {
   headers: {
     'Content-Type': 'application/json; charset=utf-8',

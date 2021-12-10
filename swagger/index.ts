@@ -8,8 +8,8 @@
  * $ npm run start-gendoc
  */
 
-const router = require('../routes')
-const polling = require('../polling')
+const router = require('../src/routes')
+const polling = require('../src/polling')
 
 const swaggerUi = require('swagger-ui-express')
 const YAML = require('yamljs')
@@ -25,8 +25,8 @@ app.use('/doc', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
 polling.poll()
 
-app.listen(3000, () => {
+app.listen(3003, () => {
   console.log(
-    'Server is running!\nAPI documentation: http://localhost:3000/doc'
+    'Server is running!\nAPI documentation: http://localhost:3003/doc'
   )
 })
