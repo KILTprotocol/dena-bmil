@@ -1,5 +1,9 @@
 import fetch from 'node-fetch'
-import Kilt, { Identity, IEncryptedMessage, PublicIdentity } from '@kiltprotocol/sdk-js'
+import Kilt, {
+  Identity,
+  IEncryptedMessage,
+  PublicIdentity,
+} from '@kiltprotocol/sdk-js'
 import { getStoredIdentity } from './utils/helper'
 import { MESSAGING_URL, BASE_DELETE_PARAMS } from './utils/fetch'
 import {
@@ -22,7 +26,10 @@ const handleMessages = async (messages: IEncryptedMessage[]) => {
 
   for (const encrypted of messages) {
     const decryted = Kilt.Message.decrypt(encrypted, identity)
-    const sender = new PublicIdentity(decryted.senderAddress, decryted.senderBoxPublicKey)
+    const sender = new PublicIdentity(
+      decryted.senderAddress,
+      decryted.senderBoxPublicKey
+    )
     try {
       switch (decryted.body.type) {
         case Kilt.Message.BodyType.SUBMIT_ATTESTATION_FOR_CLAIM:

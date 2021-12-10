@@ -1,12 +1,15 @@
 import express from 'express'
 import fetch from 'node-fetch'
 import Kilt from '@kiltprotocol/sdk-js'
+import { config } from 'dotenv'
 import { getStoredCredential, getStoredIdentity } from './utils/helper'
 import { MESSAGING_URL, BASE_POST_PARAMS, CONTACTS_URL } from './utils/fetch'
 import { generateRandom, encryptAndStore } from './utils/crypto'
 
+config()
+
 Kilt.config({
-  address: 'wss://full-nodes.kilt.io',
+  address: process.env.KILT_NODE || 'wss://full-nodes.kilt.io',
 })
 
 const router = express.Router()

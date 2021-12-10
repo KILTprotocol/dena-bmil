@@ -6,7 +6,7 @@ import { poll } from './polling'
 config()
 
 const app = express()
-const port = 3000
+const port = 3002
 
 app.use(routes)
 
