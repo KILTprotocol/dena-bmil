@@ -187,6 +187,7 @@ async function makeNewCtype() {
   const newCtypeToStore = CType.fromSchema(newCtypeSchema, identity.address)
 
   // Anchor to blockchain
+  console.log('Anchoring ctype to blockchain')
   const tx = await newCtypeToStore.store()
 
   try {

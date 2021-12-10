@@ -6,7 +6,7 @@ import { MESSAGING_URL, BASE_POST_PARAMS, CONTACTS_URL } from './utils/fetch'
 import { generateRandom, encryptAndStore } from './utils/crypto'
 
 Kilt.config({
-  address: 'wss://full-nodes.kilt.io',
+  address: process.env.KILT_NODE || 'wss://full-nodes.kilt.io',
 })
 
 const router = express.Router()
